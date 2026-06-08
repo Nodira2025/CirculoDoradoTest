@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Examen Oficial Círculo Dorado - Simon Sinek</title>
+    <title>Examen Oficial Círculo Dorado - Instituto NOA</title>
     <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Fuente -->
@@ -11,12 +11,12 @@
     
     <style>
         :root {
-            --primary-color: #d4af37; /* Dorado Sinek */
-            --primary-dark: #aa8010;
-            --secondary-color: #111111; /* Negro Elegante */
-            --accent-color: #27ae60; /* Verde */
-            --bg-color: #fdfaf4; /* Crema muy claro */
-            --text-color: #333;
+            --primary-color: #ff6600; /* Naranja NOA */
+            --primary-dark: #d35400;
+            --secondary-color: #1a1a1a; /* Negro NOA */
+            --accent-color: #27ae60; /* Verde para aciertos */
+            --bg-color: #f4f4f4; /* Gris claro de fondo */
+            --text-color: #333333;
             --card-bg: #ffffff;
         }
 
@@ -46,7 +46,7 @@
             max-width: 800px;
             background: var(--card-bg);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -54,54 +54,9 @@
             z-index: 1;
         }
 
-        /* --- CÁMARA FLOTANTE --- */
-        .security-cam {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 180px;
-            height: 135px;
-            background: #000;
-            border: 4px solid #333;
-            border-radius: 8px;
-            z-index: 9999;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
-            overflow: hidden;
-            display: none; /* Se activa con JS */
-        }
-
-        .security-cam video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.7;
-            filter: grayscale(30%);
-        }
-
-        .rec-indicator {
-            position: absolute;
-            top: 5px; left: 5px;
-            color: #ff0000;
-            font-weight: bold;
-            font-family: monospace;
-            font-size: 0.8rem;
-            display: flex; align-items: center; gap: 5px;
-            background: rgba(0,0,0,0.6);
-            padding: 2px 6px;
-            border-radius: 3px;
-        }
-
-        .rec-dot {
-            width: 10px; height: 10px;
-            background-color: #ff0000;
-            border-radius: 50%;
-            animation: blink 1s infinite;
-        }
-        @keyframes blink { 50% { opacity: 0; } }
-
         /* HEADER */
         header {
-            background: linear-gradient(135deg, var(--secondary-color), #222222);
+            background: linear-gradient(135deg, var(--secondary-color), #2d2d2d);
             color: white;
             padding: 15px 20px;
             display: flex; justify-content: space-between; align-items: center;
@@ -110,20 +65,24 @@
         /* LOGO ESTILOS */
         .logo-area { 
             font-weight: 900; 
-            font-size: 1.2rem; 
+            font-size: 1.1rem; 
             display: flex; 
             align-items: center; 
-            gap: 15px; 
+            gap: 12px; 
             text-transform: uppercase; 
         }
         
-        .logo-icon {
-            font-size: 1.8rem;
-            color: var(--primary-color);
+        .logo-img {
+            height: 45px;
+            width: auto;
+            background: white;
+            padding: 4px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .timer-badge {
-            background: white; color: var(--primary-dark);
+            background: white; color: var(--primary-color);
             padding: 5px 15px; border-radius: 20px;
             font-weight: bold; font-size: 1.2rem;
             display: flex; align-items: center; gap: 5px;
@@ -176,8 +135,8 @@
 
         .question-image {
             width: 100%; height: 140px; border-radius: 10px; margin-bottom: 15px;
-            background-color: #fdfaf4; display: flex; align-items: center; justify-content: center;
-            font-size: 4rem; color: #eedcb3; border: 2px dashed var(--primary-color);
+            background-color: #fff8f5; display: flex; align-items: center; justify-content: center;
+            font-size: 4rem; color: #ffd1b3; border: 2px dashed var(--primary-color);
         }
         .question-text { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; color: #444; min-height: 50px; }
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
@@ -187,7 +146,7 @@
             background: white; border: 2px solid #ddd; padding: 12px; border-radius: 8px;
             cursor: pointer; font-size: 1rem; text-align: left; position: relative; color: #555; font-weight: 500;
         }
-        .option-btn:hover:not(:disabled) { border-color: var(--primary-color); background: #fdfaf4; }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary-color); background: #fff8f5; }
         .option-btn.correct { background: var(--accent-color); color: white; border-color: var(--accent-color); }
         .option-btn.incorrect { background: var(--secondary-color); color: white; border-color: var(--secondary-color); }
         .option-btn.hidden { opacity: 0; pointer-events: none; }
@@ -219,17 +178,12 @@
 </head>
 <body oncontextmenu="return false;">
 
-<!-- CÁMARA FLOTANTE -->
-<div class="security-cam" id="securityCam">
-    <div class="rec-indicator"><div class="rec-dot"></div> REC • LIVE</div>
-    <video id="webcamVideo" autoplay muted playsinline></video>
-</div>
-
 <div class="container">
     <header>
         <div class="logo-area">
-            <i class="fas fa-circle-notch logo-icon"></i>
-            DIZALO • CÍRCULO DORADO
+            <!-- Si no tienes el logo local, se mostrará el nombre por defecto -->
+            <img src="logo-noa.png" alt="Logo NOA" class="logo-img" onerror="this.style.display='none'">
+            INSTITUTO NOA
         </div>
         <div style="display:flex; align-items:center;">
             <div class="timer-badge" id="timerBadge" style="display:none;">
@@ -248,8 +202,8 @@
         <h1 style="color:var(--primary-dark)">Evaluación del Círculo Dorado</h1>
         
         <div style="background: white; padding: 15px; border-radius: 10px; margin: 20px 0; text-align: left; width: 100%; border-left: 5px solid var(--primary-color);">
-            <p><strong><i class="fas fa-video"></i> REQUISITO DE MONITOREO:</strong></p>
-            <p style="font-size:0.9rem; margin-top:5px;">Este examen utiliza supervisión por cámara para validar el aprendizaje sobre el modelo de Simon Sinek. Activa los permisos para continuar.</p>
+            <p><strong><i class="fas fa-info-circle"></i> INSTRUCCIONES DEL EXAMEN:</strong></p>
+            <p style="font-size:0.9rem; margin-top:5px;">Esta evaluación validará tus conocimientos sobre el modelo de Simon Sinek de Dizalo. Asegúrate de contar con una conexión estable.</p>
         </div>
         
         <ul style="font-size: 0.9rem; color: #666; margin-bottom: 10px; list-style: none;">
@@ -258,7 +212,7 @@
             <li><i class="fas fa-lock"></i> Un solo intento permitido.</li>
         </ul>
 
-        <button class="btn" onclick="initExam()">ACTIVAR CÁMARA Y COMENZAR</button>
+        <button class="btn" onclick="startExam()">COMENZAR EXAMEN</button>
     </div>
 
     <!-- PANTALLA JUEGO -->
@@ -312,12 +266,12 @@
             </h4>
             <label>Nombre Completo:</label><input type="text" id="inputName" class="form-input" placeholder="Tu nombre">
             <label>ID / DNI:</label><input type="number" id="inputDNI" class="form-input" placeholder="Tu identificación">
-            <label>Comisión / Empresa:</label><input type="text" id="inputCourse" class="form-input" placeholder="Ej: Dirección de Marketing">
+            <label>Comisión / Curso:</label><input type="text" id="inputCourse" class="form-input" placeholder="Ej: Dirección de Marketing">
             <div style="font-size: 0.8rem; color: #888; margin-top:5px;">Código de Verificación: <span id="valCode" style="font-family:monospace; font-weight:bold;">---</span></div>
         </div>
 
         <a href="#" id="whatsappBtn" class="btn btn-whatsapp" onclick="return validateAndSend()">
-            <i class="fab fa-whatsapp"></i> ENVIAR AL WHATSAPP (3812234142)
+            <i class="fab fa-whatsapp"></i> ENVIAR AL WHATSAPP (+54 381 649 0060)
         </a>
         <div class="review-list" id="reviewList"></div>
     </div>
@@ -391,20 +345,7 @@
         }
     };
 
-    // INICIO CON CÁMARA
-    async function initExam() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            const videoElement = document.getElementById('webcamVideo');
-            videoElement.srcObject = stream;
-            document.getElementById('securityCam').style.display = 'block';
-            startQuiz();
-        } catch (err) {
-            alert("ERROR: El sistema requiere acceso a la cámara para validar la identidad y el entorno del examen. Por favor, permite el acceso y recarga la página.");
-        }
-    }
-
-    function startQuiz() {
+    function startExam() {
         startScreen.classList.remove('active');
         gameScreen.classList.add('active');
         document.getElementById('timerBadge').style.display = 'flex';
@@ -565,12 +506,6 @@
     function finish() {
         const examData = { score: score, userAns: userAns, date: new Date().toISOString() };
         localStorage.setItem('dizalo_exam_golden_circle', JSON.stringify(examData));
-        
-        // Parar cámara
-        const videoEl = document.getElementById('webcamVideo');
-        if (videoEl.srcObject) videoEl.srcObject.getTracks().forEach(track => track.stop());
-        document.getElementById('securityCam').style.display = 'none';
-
         showResults(score, userAns, false);
     }
 
@@ -593,9 +528,9 @@
         else if(finalScore >= PASS_SCORE) { rankEl.innerText = "APROBADO"; rankEl.style.background = "var(--primary-dark)"; }
         else { rankEl.innerText = "REPROBADO"; rankEl.style.background = "#c0392b"; }
         
-        document.getElementById('motivationalMsg').innerText = finalScore >= PASS_SCORE ? "¡Felicidades! Lograste comprender la esencia de empezar con el '¿Por qué?'." : "Te recomendamos revisar la teoría del cerebro límbico y los ejemplos del artículo.";
+        document.getElementById('motivationalMsg').innerText = finalScore >= PASS_SCORE ? "¡Felicidades! Lograste comprender la esencia de empezar con el '¿Por qué?'." : "Te sugerimos revisar la teoría del cerebro límbico y los ejemplos del artículo.";
 
-        const code = `DYZ-${finalScore}-${Math.floor(Math.random()*9000)+1000}`;
+        const code = `NOA-DYZ-${finalScore}-${Math.floor(Math.random()*9000)+1000}`;
         document.getElementById('valCode').innerText = code;
 
         const list = document.getElementById('reviewList');
@@ -618,9 +553,9 @@
         
         const endTime = new Date();
         const duration = startTime ? Math.round((endTime - startTime)/1000/60) + " min" : "Recarga";
-        const msg = `*EVALUACIÓN CÍRCULO DORADO - DIZALO*%0A--------------------------%0A*Estratega:* ${name}%0A*Identificación:* ${dni}%0A*Comisión/Área:* ${course}%0A*Calificación:* ${score}/${TOTAL_QUESTIONS}%0A*Código de Validación:* ${code}%0A*Tiempo de resolución:* ${duration}%0A--------------------------%0AEnvío certificado de forma digital.`;
+        const msg = `*EVALUACIÓN CÍRCULO DORADO - INSTITUTO NOA*%0A--------------------------%0A*Estratega:* ${name}%0A*Identificación:* ${dni}%0A*Comisión/Área:* ${course}%0A*Calificación:* ${score}/${TOTAL_QUESTIONS}%0A*Código de Validación:* ${code}%0A*Tiempo de resolución:* ${duration}%0A--------------------------%0AEnvío certificado de forma digital.`;
         
-        window.open(`https://wa.me/5493816490060?text=${msg}`, '_blank');
+        window.open(`https://wa.me/543816490060?text=${msg}`, '_blank');
     }
 </script>
 </body>
