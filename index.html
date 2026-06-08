@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Oficial Círculo Dorado - Simon Sinek</title>
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Fuente -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #d4af37; /* Dorado Sinek */
+            --primary-dark: #aa8010;
+            --secondary-color: #111111; /* Negro Elegante */
+            --accent-color: #27ae60; /* Verde */
+            --bg-color: #fdfaf4; /* Crema muy claro */
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            /* SEGURIDAD: NO SELECCIONAR TEXTO */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- CÁMARA FLOTANTE --- */
+        .security-cam {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 180px;
+            height: 135px;
+            background: #000;
+            border: 4px solid #333;
+            border-radius: 8px;
+            z-index: 9999;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+            overflow: hidden;
+            display: none; /* Se activa con JS */
+        }
+
+        .security-cam video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+            filter: grayscale(30%);
+        }
+
+        .rec-indicator {
+            position: absolute;
+            top: 5px; left: 5px;
+            color: #ff0000;
+            font-weight: bold;
+            font-family: monospace;
+            font-size: 0.8rem;
+            display: flex; align-items: center; gap: 5px;
+            background: rgba(0,0,0,0.6);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .rec-dot {
+            width: 10px; height: 10px;
+            background-color: #ff0000;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, var(--secondary-color), #222222);
+            color: white;
+            padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        /* LOGO ESTILOS */
+        .logo-area { 
+            font-weight: 900; 
+            font-size: 1.2rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            text-transform: uppercase; 
+        }
+        
+        .logo-icon {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .timer-badge {
+            background: white; color: var(--primary-dark);
+            padding: 5px 15px; border-radius: 20px;
+            font-weight: bold; font-size: 1.2rem;
+            display: flex; align-items: center; gap: 5px;
+            border: 2px solid #fff;
+        }
+
+        .btn-finish-early {
+            background: #c0392b; color: white; border: none;
+            padding: 8px 12px; border-radius: 5px; font-size: 0.8rem;
+            cursor: pointer; margin-left: 10px;
+        }
+
+        .progress-container { background-color: #eee; height: 8px; width: 100%; }
+        .progress-bar { background-color: var(--primary-color); height: 100%; width: 0%; transition: width 0.3s ease; }
+
+        /* SCREENS */
+        .screen {
+            padding: 25px; flex: 1; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; animation: fadeIn 0.4s;
+        }
+        .screen.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .intro-icon { font-size: 5rem; color: var(--primary-color); margin-bottom: 20px; }
+        
+        .btn {
+            background-color: var(--primary-color); color: white; border: none;
+            padding: 15px 40px; border-radius: 50px; font-size: 1.1rem;
+            font-weight: bold; cursor: pointer; transition: transform 0.2s;
+            margin-top: 20px; text-decoration: none; display: inline-block;
+            box-shadow: 0 4px 0 var(--primary-dark);
+        }
+        .btn:hover { transform: translateY(-2px); background: var(--primary-dark); }
+        .btn:active { transform: translateY(2px); box-shadow: none; }
+        .btn-whatsapp { background-color: #25D366; box-shadow: 0 4px 0 #1e994a; width: 100%; margin-top: 15px; }
+
+        /* GAME AREA */
+        .stats-bar { display: flex; justify-content: space-between; width: 100%; margin-bottom: 15px; font-weight: bold; color: #7f8c8d; }
+        
+        .lifelines-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .lifeline-btn {
+            background: white; border: 2px solid var(--primary-color); color: var(--primary-dark);
+            width: 55px; height: 55px; border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; position: relative; font-size: 0.7rem; font-weight: bold;
+        }
+        .lifeline-btn:disabled { border-color: #ccc; color: #ccc; opacity: 0.5; cursor: not-allowed; }
+        .badge-count { position: absolute; top: -5px; right: -5px; background: var(--secondary-color); color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; }
+
+        .question-image {
+            width: 100%; height: 140px; border-radius: 10px; margin-bottom: 15px;
+            background-color: #fdfaf4; display: flex; align-items: center; justify-content: center;
+            font-size: 4rem; color: #eedcb3; border: 2px dashed var(--primary-color);
+        }
+        .question-text { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; color: #444; min-height: 50px; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+        @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
+
+        .option-btn {
+            background: white; border: 2px solid #ddd; padding: 12px; border-radius: 8px;
+            cursor: pointer; font-size: 1rem; text-align: left; position: relative; color: #555; font-weight: 500;
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary-color); background: #fdfaf4; }
+        .option-btn.correct { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .option-btn.incorrect { background: var(--secondary-color); color: white; border-color: var(--secondary-color); }
+        .option-btn.hidden { opacity: 0; pointer-events: none; }
+
+        /* OVERLAYS */
+        .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.92); display: none; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 900; padding: 20px;
+            color: white; text-align: center; backdrop-filter: blur(5px);
+        }
+
+        /* MOTIVATION CARD */
+        .motivation-card {
+            background: white; color: #333; border-radius: 15px; max-width: 400px;
+            overflow: hidden; box-shadow: 0 10px 30px rgba(255,255,255,0.2); animation: popIn 0.5s;
+        }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .motivation-img { width: 100%; height: 200px; object-fit: cover; }
+        .motivation-content { padding: 20px; }
+        .motivation-quote { font-style: italic; font-size: 1.1rem; margin-bottom: 10px; color: var(--primary-dark); font-weight: bold; }
+
+        /* RESULT FORM */
+        .student-form { width: 100%; background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 15px 0; text-align: left; border: 1px solid #ddd; }
+        .form-input { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .review-list { width: 100%; text-align: left; max-height: 150px; overflow-y: auto; margin-top: 15px; border: 1px solid #ddd; padding: 10px; background: #fff; font-size: 0.8rem; }
+        .alert-box { background: #ffebee; color: #c62828; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid #ef9a9a; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<!-- CÁMARA FLOTANTE -->
+<div class="security-cam" id="securityCam">
+    <div class="rec-indicator"><div class="rec-dot"></div> REC • LIVE</div>
+    <video id="webcamVideo" autoplay muted playsinline></video>
+</div>
+
+<div class="container">
+    <header>
+        <div class="logo-area">
+            <i class="fas fa-circle-notch logo-icon"></i>
+            DIZALO • CÍRCULO DORADO
+        </div>
+        <div style="display:flex; align-items:center;">
+            <div class="timer-badge" id="timerBadge" style="display:none;">
+                <i class="fas fa-stopwatch"></i> <span id="timer">20</span>
+            </div>
+            <button class="btn-finish-early" id="finishBtn" onclick="confirmFinish()" style="display:none;">
+                <i class="fas fa-flag"></i> Fin
+            </button>
+        </div>
+    </header>
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+
+    <!-- PANTALLA INICIO -->
+    <div id="startScreen" class="screen active">
+        <div class="intro-icon"><i class="fas fa-award"></i></div>
+        <h1 style="color:var(--primary-dark)">Evaluación del Círculo Dorado</h1>
+        
+        <div style="background: white; padding: 15px; border-radius: 10px; margin: 20px 0; text-align: left; width: 100%; border-left: 5px solid var(--primary-color);">
+            <p><strong><i class="fas fa-video"></i> REQUISITO DE MONITOREO:</strong></p>
+            <p style="font-size:0.9rem; margin-top:5px;">Este examen utiliza supervisión por cámara para validar el aprendizaje sobre el modelo de Simon Sinek. Activa los permisos para continuar.</p>
+        </div>
+        
+        <ul style="font-size: 0.9rem; color: #666; margin-bottom: 10px; list-style: none;">
+            <li><i class="fas fa-check"></i> 25 Preguntas de opción múltiple.</li>
+            <li><i class="fas fa-clock"></i> 20 segundos por pregunta.</li>
+            <li><i class="fas fa-lock"></i> Un solo intento permitido.</li>
+        </ul>
+
+        <button class="btn" onclick="initExam()">ACTIVAR CÁMARA Y COMENZAR</button>
+    </div>
+
+    <!-- PANTALLA JUEGO -->
+    <div id="gameScreen" class="screen">
+        <div class="stats-bar">
+            <span id="qCount">1/25</span>
+            <span id="sCount">Aciertos: 0</span>
+        </div>
+        <div class="lifelines-container">
+            <button class="lifeline-btn" id="btnFifty" onclick="useFifty()"><div class="badge-count" id="c50">3</div><i class="fas fa-adjust"></i> 50:50</button>
+            <button class="lifeline-btn" id="btnTime" onclick="useTime()"><div class="badge-count" id="cTime">4</div><i class="fas fa-clock"></i> +15s</button>
+            <button class="lifeline-btn" id="btnSkip" onclick="useSkip()"><div class="badge-count" id="cSkip">1</div><i class="fas fa-gift"></i> Skip</button>
+        </div>
+        <div class="question-image" id="qImage"></div>
+        <div class="question-text" id="qText"></div>
+        <div class="options-grid" id="optContainer"></div>
+    </div>
+
+    <!-- OVERLAYS -->
+    <div id="feedbackOverlay" class="overlay">
+        <div id="fbIcon" style="font-size: 4rem; margin-bottom: 15px;"></div>
+        <h2 id="fbTitle" style="margin-bottom: 10px;"></h2>
+        <p id="fbText" style="margin-bottom: 25px; font-size: 1.1rem; line-height: 1.4;"></p>
+        <button class="btn" id="nextBtn" style="background:white; color:var(--secondary-color); box-shadow:none;">CONTINUAR <i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <div id="motivationOverlay" class="overlay" style="background: rgba(0,0,0,0.85);">
+        <div class="motivation-card">
+            <img src="" id="motImg" class="motivation-img" alt="Motivación">
+            <div class="motivation-content">
+                <div class="motivation-quote" id="motQuote"></div>
+                <p style="font-size: 0.9rem; color: #666;">¡Vamos! Estás haciendo un gran trabajo.</p>
+                <button class="btn" onclick="closeMotivation()" style="padding: 10px 30px; margin-top: 15px; font-size: 0.9rem;">CONTINUAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTADOS -->
+    <div id="resultScreen" class="screen">
+        <h2 style="color: #666;">Evaluación Finalizada</h2>
+        <div class="alert-box" id="cheatAlert" style="display:none;">
+            <i class="fas fa-user-lock"></i> Intento de reingreso bloqueado. Resultado anterior:
+        </div>
+        <div id="rankBadge" style="background:gray; color:white; padding:5px 15px; border-radius:15px; font-weight:bold; margin:10px 0;">NIVEL</div>
+        <div class="result-score" id="finalScore">0/25</div>
+        <p id="motivationalMsg">Mensaje</p>
+
+        <div class="student-form">
+            <h4 style="border-bottom:1px solid #ddd; padding-bottom:5px; margin-bottom:10px; color:var(--primary-dark);">
+                <i class="fas fa-paper-plane"></i> Enviar Resultados
+            </h4>
+            <label>Nombre Completo:</label><input type="text" id="inputName" class="form-input" placeholder="Tu nombre">
+            <label>ID / DNI:</label><input type="number" id="inputDNI" class="form-input" placeholder="Tu identificación">
+            <label>Comisión / Empresa:</label><input type="text" id="inputCourse" class="form-input" placeholder="Ej: Dirección de Marketing">
+            <div style="font-size: 0.8rem; color: #888; margin-top:5px;">Código de Verificación: <span id="valCode" style="font-family:monospace; font-weight:bold;">---</span></div>
+        </div>
+
+        <a href="#" id="whatsappBtn" class="btn btn-whatsapp" onclick="return validateAndSend()">
+            <i class="fab fa-whatsapp"></i> ENVIAR AL WHATSAPP (3812234142)
+        </a>
+        <div class="review-list" id="reviewList"></div>
+    </div>
+</div>
+
+<script>
+    const TIME_PER_QUESTION = 20;
+    const PASS_SCORE = 15; // 60% de aprobación sobre 25 preguntas
+    const TOTAL_QUESTIONS = 25;
+    
+    // 25 Preguntas ÚNICAS fundamentadas en el artículo de Dizalo sobre Simon Sinek
+    const db = [
+        { q: "¿Quién creó el modelo del 'Círculo Dorado' (The Golden Circle)?", o: ["Steve Jobs", "Simon Sinek", "Oliver Puente", "Philip Kotler"], a: 1, e: "Simon Sinek, escritor inglés especialista en liderazgo, creó este modelo que se viralizó en su charla TED.", i: "fa-user-tie" },
+        { q: "¿En qué libro publicado en 2009 se dio a conocer originalmente este concepto?", o: ["Start with Why (Empieza con el porqué)", "Leaders Eat Last", "The Infinite Game", "Branding Moderno"], a: 0, e: "El concepto se publicó por primera vez en su exitoso libro 'Start with Why' en el año 2009.", i: "fa-book" },
+        { q: "Según el artículo, ¿por qué son exitosas las empresas y personas más destacadas de la historia?", o: ["Por tener un presupuesto ilimitado de publicidad", "Por moverse en base a significados y creencias que inspiran", "Por contar siempre con el apoyo masivo de la prensa", "Por competir únicamente con estrategias de precios bajos"], a: 1, e: "Las marcas y personas líderes no triunfan por factores comunes (dinero, mercado), sino porque inspiran a través de propósitos.", i: "fa-lightbulb" },
+        { q: "La efectividad del modelo del Círculo Dorado se fundamenta científicamente en:", o: ["La teoría macroeconómica moderna", "La biología del cerebro humano", "Las estadísticas de ventas de Fortune 500", "Algoritmos avanzados de inteligencia artificial"], a: 1, e: "Sinek fundamenta su modelo en la biología y la evolución del cerebro, no es una simple opinión corporativa.", i: "fa-dna" },
+        { q: "¿Cuáles son las tres secciones del cerebro humano que se correlacionan con el Círculo Dorado?", o: ["Cerebelo, Amígdala e Hipocampo", "Neocórtex, Cerebro Límbico y Cerebro Reptiliano", "Hemisferio Izquierdo, Derecho y Corteza", "Lóbulo Frontal, Parietal y Occipital"], a: 1, e: "El cerebro humano se divide en Neocórtex, Cerebro Límbico y Cerebro Reptiliano, correlacionándose con el Qué, Cómo y Por Qué.", i: "fa-brain" },
+        { q: "¿Con qué sección del Círculo Dorado está relacionado directamente el Neocórtex?", o: ["El ¿Por qué?", "El ¿Cómo?", "El ¿Qué?", "Ninguno de los anteriores"], a: 2, e: "El Neocórtex se relaciona con el '¿Qué?' (los resultados o productos/servicios tangibles).", i: "fa-circle" },
+        { q: "¿De qué procesos cognitivos es responsable el Neocórtex?", o: ["Instintos básicos de supervivencia como comer o respirar", "Pensamientos racionales, analíticos y el lenguaje", "Emociones profundas, lealtad y confianza", "La toma de decisiones de compra automáticas e irracionales"], a: 1, e: "El neocórtex se encarga de todo lo analítico, de la lógica fría, los datos y la decodificación del lenguaje.", i: "fa-calculator" },
+        { q: "¿Con qué partes del Círculo Dorado se relaciona el Cerebro Límbico?", o: ["Únicamente con el ¿Qué?", "Con el ¿Cómo? y el ¿Por qué?", "Con el ¿Qué? y el ¿Por qué?", "Exclusivamente con el Cerebro Reptiliano"], a: 1, e: "El Cerebro Límbico (las dos secciones del medio) se relaciona con el '¿Cómo?' y el '¿Por qué?'.", i: "fa-circle-dot" },
+        { q: "¿De qué sentimientos y funciones es encargado el Cerebro Límbico?", o: ["La respiración y la digestión", "Felicidad, confianza, lealtad y toma de decisiones", "El habla estructurada y la gramática verbal", "Los cálculos matemáticos complejos"], a: 1, e: "El cerebro límbico regula nuestras emociones, genera confianza y lealtad, impulsando la toma de decisiones.", i: "fa-face-smile" },
+        { q: "¿Qué limitación crucial tiene el Cerebro Límbico con respecto a la comunicación?", o: ["No tiene capacidad o habilidad para el lenguaje", "No puede procesar imágenes visuales", "Olvida los datos después de 5 segundos", "No tiene conexión con el sistema nervioso"], a: 0, e: "El cerebro límbico procesa emociones pero carece de habilidad lingüística, por eso a veces es difícil expresar 'por qué' amamos algo.", i: "fa-comment-slash" },
+        { q: "¿De qué funciones se encarga la sección del Cerebro Reptiliano?", o: ["De la lógica matemática y análisis financiero", "De funciones básicas y primitivas como respirar o comer", "Del branding estratégico y posicionamiento de marca", "De la empatía social y relaciones interpersonales"], a: 1, e: "El cerebro reptil maneja las necesidades más instintivas e involuntarias de supervivencia.", i: "fa-lungs" },
+        { q: "¿Por qué los mensajes llenos de datos y características técnicas al Neocórtex rara vez inician una compra?", o: ["Porque el Neocórtex no sabe leer cifras numéricas", "Porque el comportamiento de compra es iniciado por el Cerebro Límbico", "Porque el Cerebro Reptiliano bloquea la información racional", "Porque los datos técnicos aburren inmediatamente al Cerebro Reptil"], a: 1, e: "La racionalidad (Neocórtex) valida la decisión, pero el motor del comportamiento y la acción es emocional (Cerebro Límbico).", i: "fa-shopping-cart" },
+        { q: "En el modelo, ¿qué representa concretamente el '¿Por qué?' (Why)?", o: ["El beneficio económico esperado al final del año", "La propuesta de valor técnica y características del producto", "El propósito, causa o creencia que apoya la razón de ser", "El precio estratégico de venta al público"], a: 2, e: "El ¿Por qué? es la causa, creencia o propósito de existir de la marca, completamente desligado de hacer dinero.", i: "fa-bullseye" },
+        { q: "Según el ejemplo de Apple en el artículo, ¿cuál es su '¿Por qué?' o propósito?", o: ["Hacer computadoras muy rápidas", "Desafiar el estatus quo y pensar diferente", "Ofrecer software de diseño gratuito", "Ser la empresa con mayor capitalización de mercado"], a: 1, e: "El propósito de Apple es retar el statu quo y fomentar el pensamiento libre y diferente ('Think different').", i: "fa-apple-whole" },
+        { q: "Según el ejemplo de Disney en el artículo, ¿cuál es su '¿Por qué?' o propósito?", o: ["Hacer películas animadas en 3D", "Dar felicidad a las personas de todas las edades en todas partes", "Vender recuerdos y juguetes coleccionables", "Construir los castillos más altos del mundo"], a: 1, e: "El núcleo de Disney es un propósito sumamente emocional: llevar felicidad a todas las personas en cualquier rincón del mundo.", i: "fa-wand-magic-sparkles" },
+        { q: "Según el ejemplo de Tesla en el artículo, ¿cuál es su '¿Por qué?' o propósito?", o: ["Construir autos deportivos veloces", "Acelerar la transición del mundo hacia la energía sostenible", "Vender paneles solares económicos", "Llegar a colonizar el planeta Marte"], a: 1, e: "El propósito de Tesla va más allá del auto eléctrico; busca acelerar un cambio energético global sustentable.", i: "fa-leaf" },
+        { q: "¿A qué hace referencia el '¿Cómo?' (How) en el Círculo Dorado?", o: ["Al proceso operativo diario y factores de diferenciación", "Al manual de uso técnico del producto final", "A la inversión de capital requerida para abrir una tienda", "A las campañas de anuncios pagados en internet"], a: 0, e: "El ¿Cómo? describe las acciones y fortalezas diferenciadoras que hacen real el propósito de la marca.", i: "fa-gears" },
+        { q: "¿Cuál es el '¿Cómo?' de Apple que sostiene su propósito?", o: ["Desarrollar productos con hermoso diseño, sencillos y fáciles de usar", "Subcontratar fábricas en múltiples países de Asia", "Lanzar un teléfono nuevo de forma anual", "Ofrecer descuentos masivos a estudiantes universitarios"], a: 0, e: "Apple logra desafiar el statu quo creando productos con excelente diseño que resultan intuitivos y estéticos.", i: "fa-pen-nib" },
+        { q: "¿Cuál es el '¿Cómo?' de Disney según el texto de Dizalo?", o: ["Mediante una red masiva de cines internacionales", "A través de un lugar en donde la gente encuentre felicidad y conocimiento", "Usando marketing digital automatizado para segmentar familias", "Mediante la venta de licencias de personajes famosos"], a: 1, e: "Disney lo logra creando espacios y experiencias familiares diseñados para el goce y el aprendizaje conjunto.", i: "fa-map-location-dot" },
+        { q: "¿Cuál es el '¿Cómo?' de Tesla según el texto de Dizalo?", o: ["Reduciendo costos mediante la eliminación de concesionarios", "A través de la más sofisticada tecnología para crear productos limpios ilimitados", "Regalando cargadores rápidos en autopistas públicas", "Mediante campañas con celebridades del cine y del deporte"], a: 1, e: "Tesla utiliza ingeniería avanzada para diseñar almacenamiento y generación de energía escalable y limpia.", i: "fa-bolt" },
+        { q: "¿Qué representa el '¿Qué?' (What) en el Círculo Dorado?", o: ["La visión de negocio para el próximo siglo", "La propuesta de valor diferencial", "Los productos o servicios tangibles que ofreces y vendes", "La razón biológica de la fidelidad del consumidor"], a: 2, e: "El ¿Qué? es la parte más visible y superficial del círculo: el resultado concreto de tu trabajo (los productos/servicios).", i: "fa-box" },
+        { q: "¿Cuáles son los '¿Qué?' (resultados) de Apple, Disney y Tesla respectivamente?", o: ["Computadoras, películas/parques y vehículos eléctricos", "Estrategia digital, juguetes y baterías baratas", "Teléfonos, streaming de video y paneles solares", "Dispositivos móviles, cruceros y cohetes espaciales"], a: 0, e: "Apple hace computadoras, Disney películas y parques, y Tesla vehículos eléctricos. Es lo que venden físicamente.", i: "fa-list-check" },
+        { q: "¿Cuál es el orden recomendado por Simon Sinek para construir marcas y mensajes persuasivos?", o: ["De afuera hacia adentro (Qué -> Cómo -> Por qué)", "De adentro hacia afuera (Por qué -> Cómo -> Qué)", "Alternando según las necesidades del mercado", "Ignorando el ¿Por qué? y potenciando el ¿Qué?"], a: 1, e: "Debes comunicarte de adentro hacia afuera: hablarle primero al porqué (emoción/decisión) y terminar en el qué (racional/producto).", i: "fa-arrows-to-eye" },
+        { q: "Complete la famosa frase de Sinek: 'La gente no compra lo que uno hace; compra...'", o: ["...el precio más bajo que ofreces'", "...el por qué uno lo hace'", "...la marca con mayor estatus social'", "...el producto con más funciones técnicas'"], a: 1, e: "'La gente no compra lo que uno hace; compra el por qué uno lo hace.' Esta frase resume el núcleo del Círculo Dorado.", i: "fa-quote-left" },
+        { q: "Al estructurar un mensaje con el Círculo Dorado, ¿qué rol cumple la racionalidad (Neocórtex)?", o: ["Toma la decisión final de forma independiente", "Valida de forma lógica la decisión ya tomada emocionalmente", "Bloquea cualquier intento de compra impulsiva", "Procesa los sentimientos de lealtad profunda"], a: 1, e: "Hablamos al cerebro límbico para que decida, y luego el neocórtex se encarga de justificar racionalmente esa decisión.", i: "fa-shield-halved" }
+    ];
+
+    const motivations = [
+        { t: "La gente no compra lo que uno hace; compra el por qué uno lo hace.", i: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=500&q=60" },
+        { t: "Trabajar duro por algo que no nos importa se llama estrés. Trabajar duro por algo que amamos se llama pasión.", i: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=500&q=60" },
+        { t: "Los líderes inspiradores no nos dicen qué hacer; nos recuerdan quiénes somos y por qué importa nuestro esfuerzo.", i: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=500&q=60" },
+        { t: "El liderazgo no se trata de estar a cargo, se trata de cuidar de las personas a tu cargo.", i: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=500&q=60" },
+        { t: "Las marcas icónicas se comunican desde el porqué. Lo racional justifica el impulso que la emoción ya decidió.", i: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=500&q=60" }
+    ];
+
+    // Se seleccionan de forma aleatoria las 25 preguntas de la base
+    let questions = db.sort(() => Math.random() - 0.5).slice(0, TOTAL_QUESTIONS);
+    
+    // VARIABLES
+    let currentIdx = 0;
+    let score = 0;
+    let userAns = [];
+    let timerInterval;
+    let timeLeft = TIME_PER_QUESTION;
+    let startTime;
+    let lifelines = { fifty: 3, time: 4, skip: 1 };
+    
+    // ELEMENTOS UI
+    const timerDisplay = document.getElementById('timer');
+    const startScreen = document.getElementById('startScreen');
+    const gameScreen = document.getElementById('gameScreen');
+    const resultScreen = document.getElementById('resultScreen');
+
+    // CHECK INICIAL (Bloqueo de reintento)
+    window.onload = function() {
+        if(localStorage.getItem('dizalo_exam_golden_circle')) {
+            const data = JSON.parse(localStorage.getItem('dizalo_exam_golden_circle'));
+            showResults(data.score, data.userAns, true);
+        }
+    };
+
+    // INICIO CON CÁMARA
+    async function initExam() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const videoElement = document.getElementById('webcamVideo');
+            videoElement.srcObject = stream;
+            document.getElementById('securityCam').style.display = 'block';
+            startQuiz();
+        } catch (err) {
+            alert("ERROR: El sistema requiere acceso a la cámara para validar la identidad y el entorno del examen. Por favor, permite el acceso y recarga la página.");
+        }
+    }
+
+    function startQuiz() {
+        startScreen.classList.remove('active');
+        gameScreen.classList.add('active');
+        document.getElementById('timerBadge').style.display = 'flex';
+        document.getElementById('finishBtn').style.display = 'block';
+        startTime = new Date();
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = questions[currentIdx];
+        document.getElementById('qCount').innerText = `${currentIdx + 1}/${TOTAL_QUESTIONS}`;
+        document.getElementById('sCount').innerText = `Aciertos: ${score}`;
+        document.getElementById('progressBar').style.width = `${(currentIdx/TOTAL_QUESTIONS)*100}%`;
+        
+        document.getElementById('qText').innerText = q.q;
+        document.getElementById('qImage').innerHTML = `<i class="fas ${q.i}"></i>`;
+        
+        const cont = document.getElementById('optContainer');
+        cont.innerHTML = '';
+        q.o.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => answer(i, btn);
+            cont.appendChild(btn);
+        });
+
+        updateLifelines();
+        resetTimer();
+    }
+
+    function resetTimer() {
+        clearInterval(timerInterval);
+        timeLeft = TIME_PER_QUESTION;
+        timerDisplay.innerText = timeLeft;
+        timerDisplay.parentElement.style.background = 'white';
+        timerDisplay.parentElement.style.color = 'var(--primary-dark)';
+
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timerDisplay.innerText = timeLeft;
+            if(timeLeft <= 5) {
+                timerDisplay.parentElement.style.background = '#c0392b';
+                timerDisplay.parentElement.style.color = 'white';
+            }
+            if(timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timeOver();
+            }
+        }, 1000);
+    }
+
+    function timeOver() {
+        const q = questions[currentIdx];
+        recordAnswer(q.q, "Tiempo Agotado", q.o[q.a], false);
+        feedback(false, "¡Tiempo Agotado!", q.e, "fa-hourglass-end");
+    }
+
+    function answer(idx, btn) {
+        clearInterval(timerInterval);
+        const q = questions[currentIdx];
+        const isCorrect = (idx === q.a);
+        
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach(b => b.disabled = true);
+
+        if(isCorrect) { btn.classList.add('correct'); score++; }
+        else { btn.classList.add('incorrect'); btns[q.a].classList.add('correct'); }
+
+        recordAnswer(q.q, q.o[idx], q.o[q.a], isCorrect);
+        feedback(isCorrect, isCorrect ? "¡Correcto!" : "Incorrecto", q.e, isCorrect ? "fa-check" : "fa-times");
+    }
+
+    function recordAnswer(q, u, c, ok) { userAns.push({q, u, c, ok}); }
+
+    function feedback(ok, title, exp, icon) {
+        const overlay = document.getElementById('feedbackOverlay');
+        document.getElementById('fbTitle').innerText = title;
+        document.getElementById('fbTitle').style.color = ok ? '#2ecc71' : '#e74c3c';
+        document.getElementById('fbIcon').innerHTML = `<i class="fas ${icon}" style="color:${ok ? '#2ecc71' : '#e74c3c'}"></i>`;
+        document.getElementById('fbText').innerHTML = `<strong>Explicación:</strong> ${exp}`;
+        
+        overlay.style.display = 'flex';
+        document.getElementById('nextBtn').onclick = () => {
+            overlay.style.display = 'none';
+            checkMotivation();
+        };
+    }
+
+    function checkMotivation() {
+        // Mostrar motivación cada 5 preguntas
+        if (currentIdx > 0 && (currentIdx + 1) % 5 === 0 && currentIdx < (TOTAL_QUESTIONS - 1)) {
+            showMotivation();
+        } else {
+            nextQ();
+        }
+    }
+
+    function showMotivation() {
+        const overlay = document.getElementById('motivationOverlay');
+        const randomMot = motivations[Math.floor(Math.random() * motivations.length)];
+        document.getElementById('motImg').src = randomMot.i;
+        document.getElementById('motQuote').innerText = `"${randomMot.t}"`;
+        overlay.style.display = 'flex';
+    }
+
+    function closeMotivation() {
+        document.getElementById('motivationOverlay').style.display = 'none';
+        nextQ();
+    }
+
+    function nextQ() {
+        currentIdx++;
+        if(currentIdx < TOTAL_QUESTIONS) loadQuestion();
+        else finish();
+    }
+
+    // COMODINES
+    function updateLifelines() {
+        document.getElementById('c50').innerText = lifelines.fifty;
+        document.getElementById('cTime').innerText = lifelines.time;
+        document.getElementById('cSkip').innerText = lifelines.skip;
+        document.getElementById('btnFifty').disabled = lifelines.fifty <= 0;
+        document.getElementById('btnTime').disabled = lifelines.time <= 0;
+        document.getElementById('btnSkip').disabled = lifelines.skip <= 0;
+    }
+    function useFifty() {
+        if(lifelines.fifty <= 0) return;
+        const q = questions[currentIdx];
+        const btns = Array.from(document.querySelectorAll('.option-btn'));
+        let wrongs = btns.map((_, i) => i).filter(i => i !== q.a);
+        wrongs.sort(() => Math.random() - 0.5).slice(0, 2).forEach(i => btns[i].classList.add('hidden'));
+        lifelines.fifty--; updateLifelines();
+    }
+    function useTime() {
+        if(lifelines.time <= 0) return;
+        timeLeft += 15; timerDisplay.innerText = timeLeft;
+        timerDisplay.parentElement.style.background = '#27ae60';
+        lifelines.time--; updateLifelines();
+    }
+    function useSkip() {
+        if(lifelines.skip <= 0) return;
+        clearInterval(timerInterval);
+        const q = questions[currentIdx];
+        score++;
+        recordAnswer(q.q, "COMODÍN SKIP", q.o[q.a], true);
+        lifelines.skip--; updateLifelines();
+        feedback(true, "¡Pregunta Regalada!", "Usaste tu comodín.", "fa-gift");
+    }
+
+    function confirmFinish() {
+        if(confirm("¿Deseas finalizar la evaluación en este momento? Se guardará tu calificación actual.")) {
+            clearInterval(timerInterval);
+            finish();
+        }
+    }
+
+    function finish() {
+        const examData = { score: score, userAns: userAns, date: new Date().toISOString() };
+        localStorage.setItem('dizalo_exam_golden_circle', JSON.stringify(examData));
+        
+        // Parar cámara
+        const videoEl = document.getElementById('webcamVideo');
+        if (videoEl.srcObject) videoEl.srcObject.getTracks().forEach(track => track.stop());
+        document.getElementById('securityCam').style.display = 'none';
+
+        showResults(score, userAns, false);
+    }
+
+    function showResults(finalScore, answers, isRevisit) {
+        startScreen.classList.remove('active');
+        gameScreen.classList.remove('active');
+        resultScreen.classList.add('active');
+        document.getElementById('timerBadge').style.display = 'none';
+        document.getElementById('finishBtn').style.display = 'none';
+
+        if(isRevisit) {
+            document.getElementById('cheatAlert').style.display = 'block';
+            document.getElementById('whatsappBtn').innerText = "REENVIAR RESULTADO (Copia)";
+        }
+
+        document.getElementById('finalScore').innerText = `${finalScore}/${TOTAL_QUESTIONS}`;
+        const rankEl = document.getElementById('rankBadge');
+        
+        if(finalScore >= 22) { rankEl.innerText = "ESTRATEGA DORADO"; rankEl.style.background = "#27ae60"; }
+        else if(finalScore >= PASS_SCORE) { rankEl.innerText = "APROBADO"; rankEl.style.background = "var(--primary-dark)"; }
+        else { rankEl.innerText = "REPROBADO"; rankEl.style.background = "#c0392b"; }
+        
+        document.getElementById('motivationalMsg').innerText = finalScore >= PASS_SCORE ? "¡Felicidades! Lograste comprender la esencia de empezar con el '¿Por qué?'." : "Te recomendamos revisar la teoría del cerebro límbico y los ejemplos del artículo.";
+
+        const code = `DYZ-${finalScore}-${Math.floor(Math.random()*9000)+1000}`;
+        document.getElementById('valCode').innerText = code;
+
+        const list = document.getElementById('reviewList');
+        list.innerHTML = '';
+        answers.forEach((a, i) => {
+            const div = document.createElement('div');
+            div.style.borderBottom = "1px solid #eee"; div.style.padding = "5px"; div.style.color = a.ok ? "green" : "red";
+            div.innerHTML = `<strong>${i+1}.</strong> ${a.ok ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>'} ${a.q}`;
+            list.appendChild(div);
+        });
+    }
+
+    function validateAndSend() {
+        const name = document.getElementById('inputName').value.trim();
+        const dni = document.getElementById('inputDNI').value.trim();
+        const course = document.getElementById('inputCourse').value.trim();
+        const code = document.getElementById('valCode').innerText;
+
+        if(!name || !dni || !course) { alert("Por favor completa todos tus datos personales."); return false; }
+        
+        const endTime = new Date();
+        const duration = startTime ? Math.round((endTime - startTime)/1000/60) + " min" : "Recarga";
+        const msg = `*EVALUACIÓN CÍRCULO DORADO - DIZALO*%0A--------------------------%0A*Estratega:* ${name}%0A*Identificación:* ${dni}%0A*Comisión/Área:* ${course}%0A*Calificación:* ${score}/${TOTAL_QUESTIONS}%0A*Código de Validación:* ${code}%0A*Tiempo de resolución:* ${duration}%0A--------------------------%0AEnvío certificado de forma digital.`;
+        
+        window.open(`https://wa.me/5493816490060?text=${msg}`, '_blank');
+    }
+</script>
+</body>
+</html>
